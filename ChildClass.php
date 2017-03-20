@@ -5,28 +5,31 @@
     public function get_formatted() {
       $formatted = $this->text;
 
-      // Start with headings, handle up to H3.
-      $formatted = preg_replace('/^###\s*(.+)$/m', '<h3>\1</h3>', $formatted);
-      $formatted = preg_replace('/^##\s*(.+)$/m',  '<h2>\1</h2>', $formatted);
-      $formatted = preg_replace('/^#\s*(.+)$/m',   '<h1>\1</h1>', $formatted);
+      $transformations = array(
+        // Escape ampersands
+        array('/&/', '&amp;'),
+        // Headings up to 3
+        array('/^###\s*(.+)$/m', '<h3>\1</h3>'),
+        array('/^##\s*(.+)$/m',  '<h2>\1</h2>'),
+        array('/^#\s*(.+)$/m',   '<h1>\1</h1>'),
+        // Bold and italics
+        array('/\*\*([^*]+)\*\*/', '<strong>\1</strong>'),
+        array('/\*([^*]+)\*/', '<em>\1</em>'),
+        // Inline code
+        array('/`([^`]+)`/', '<code>\1</code>'),
+        // Typography
+        array('/\.\.\./', '&hellip;'),
+        array('/---/', '&mdash;')
+      );
 
-      // Handle bold and italics
-      $formatted = preg_replace(
-        '/\*\*([^*]+)\*\*/',
-        '<strong>\1</strong>',
-        $formatted
-      );
-      $formatted = preg_replace(
-        '/\*([^*]+)\*/',
-        '<em>\1</em>',
-        $formatted
-      );
-      // Handle inline code
-      $formatted = preg_replace(
-        '/`([^`]+)`/',
-        '<code>\1</code>',
-        $formatted
-      ); 
+      foreach ($transformations as &$transformation) {
+        $formatted = preg_replace(
+          $transformation[0],
+          $transformation[1],
+          $formatted
+        );
+      }
+
       return $formatted;
     }
   }
