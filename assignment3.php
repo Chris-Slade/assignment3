@@ -16,6 +16,7 @@
 
       $text = file('input.md');
       $formatter = new MarkdownFormatter($text);
+      $cloned_formatter = clone $formatter;
       echo join("\n", $formatter->get_formatted()), "\n";
 
       echo "<!-- End of PHP output -->\n";

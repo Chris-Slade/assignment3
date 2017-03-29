@@ -29,7 +29,7 @@
     }
 
     public function __clone() {
-      return new $formatter($this->$text);
+      return new Formatter($this->text);
     }
 
     public function __toString() {
